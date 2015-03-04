@@ -12,9 +12,9 @@ namespace Hecsit.PizzaGirls.UI
 
         public Customer(string address, string phone, bool card)
         {
-            Address = address;
-            Phone = phone;
-            Card = card;
+            _address = address;
+            _phone = phone;
+            _card = card;
             
         }
 
@@ -22,11 +22,13 @@ namespace Hecsit.PizzaGirls.UI
 
         #region properties
 
-        public string Address { get; set; }
+        private string _address { get; set; }
 
-        public string Phone { get; set; }
+        private string _phone { get; set; }
 
-        public bool Card { get; set; }
+        private bool _card { get; set; }
+
+        private ICollection<Order> _orders { get; set; }
 
         #endregion properties
     }

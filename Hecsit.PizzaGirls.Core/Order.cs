@@ -12,23 +12,28 @@ namespace Hecsit.PizzaGirls.UI
 
         public Order(string numberOrder, string date, string statusOrder, double costDelivery)
         {
-            NumberOrder=numberOrder;
-            Date=date;
-            StatusOrder=statusOrder;
-            CostDelivery = costDelivery;
+            _numberOrder=numberOrder;
+            _date=date;
+            _statusOrder=statusOrder;
+            _costDelivery = costDelivery;
         }
 
         #endregion constructor
 
         #region properties
 
-        public string NumberOrder { get; set; }
+        private string _numberOrder { get; set; }
 
-        public string Date { get; set; }
+        private string _date { get; set; }
 
-        public string StatusOrder { get; set; }
+        private string _statusOrder { get; set; }
 
-        public double CostDelivery { get; set; }
+        private double _costDelivery { get; set; }
+
+        //???
+        private Customer _customer { get; set; }
+        private ICollection<OrderLine> _orderLines { get; set; }
+
 
         #endregion properties
     }

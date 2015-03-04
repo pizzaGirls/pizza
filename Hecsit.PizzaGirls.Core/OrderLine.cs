@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hecsit.PizzaGirls.Core;
 
 namespace Hecsit.PizzaGirls.UI
 {
@@ -12,9 +14,9 @@ namespace Hecsit.PizzaGirls.UI
 
         public OrderLine(int quantity, double cost, string status)
         {
-            Quantity = quantity;
-            Cost = cost;
-            Status = status;
+            _quantity = quantity;
+            _cost = cost;
+            _status = status;
             
         }
 
@@ -22,11 +24,14 @@ namespace Hecsit.PizzaGirls.UI
 
         #region properties
 
-        public int Quantity { get; set; }
+        private int _quantity { get; set; }
+        private double _cost { get; set; }
+        private string _status { get; set; }
+        //????
+        private Order _order {get;set;}
+        //??
+        private Product _product;
 
-        public double Cost { get; set; }
-
-        public string Status { get; set; }
 
         #endregion properties
     }
