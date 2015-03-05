@@ -35,10 +35,15 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customer.cs" />
-    <Compile Include="Order.cs" />
-    <Compile Include="OrderLine.cs" />
-    <Compile Include="Product.cs" />
+    <Compile Include="DataAccess\MemoryRepository.cs" />
+    <Compile Include="DemoDataGenerator.cs" />
+    <Compile Include="Domain\Customer.cs" />
+    <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\IRepository.cs" />
+    <Compile Include="Domain\Order.cs" />
+    <Compile Include="Domain\OrderLine.cs" />
+    <Compile Include="Domain\OrderStatus.cs" />
+    <Compile Include="Domain\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
