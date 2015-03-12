@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Feonufry.CUI.Menu.Builders;
+﻿using Feonufry.CUI.Menu.Builders;
+using Hecsit.PizzaGirls.Core;
+using Hecsit.PizzaGirls.Core.Api;
+using Hecsit.PizzaGirls.Core.DataAccess;
+using Hecsit.PizzaGirls.Core.Domain;
 using Hecsit.PizzaGirls.UI.Actions;
 
 namespace Hecsit.PizzaGirls.UI
@@ -12,13 +11,25 @@ namespace Hecsit.PizzaGirls.UI
     {
         static void Main(string[] args)
         {
+            var customersRepository = new MemoryRepository<Customer>();
+            var productsRepository = new MemoryRepository<Product>();
+            var demoData = new DemoDataGenerator(customersRepository, productsRepository);
+
+            var productsApi = new ProductApi(productsRepository);
+            var customerApi = new CustomerApi(customersRepository);
+
+            demoData.Generate();
+
             new MenuBuilder()
-                    .Title("MENU")
+                    .Title("Pizza Delivery")
                     .Repeatable()
-                    .Item("Foo", new FooAction())
-                    .Item("Bar", new BarAction())
-                    .Exit("Exit")
-                    .GetMenu().Run();
+                    .Item("Прайс-листик ", new ShowProductsAction(productsApi))
+                    .Item("Клиентики ", new ShowCustomersAction(customerApi))
+                    .Exit("Назад")
+                    .Submenu("Измененить статус")
+                    .Exit("Назад")
+                    .End()
+                    .Exit("Закрыть").GetMenu().Run();
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Hecsit.PizzaGirls.Core.Domain;
 
-namespace Hecsit.PizzaGirls.Core.Domain
+namespace Hecsit.PizzaGirls.Core.DataAccess
 {
     public interface IRepository<T> where T : Entity
     {

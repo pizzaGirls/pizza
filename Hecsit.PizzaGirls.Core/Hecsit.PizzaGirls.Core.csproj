@@ -35,11 +35,18 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\CustomerApi.cs" />
+    <Compile Include="Api\CustomerDto.cs" />
+    <Compile Include="Api\OrderApi.cs" />
+    <Compile Include="Api\OrderDto.cs" />
+    <Compile Include="Api\OrederLineDto.cs" />
+    <Compile Include="Api\ProductApi.cs" />
+    <Compile Include="Api\ProductDto.cs" />
     <Compile Include="DataAccess\MemoryRepository.cs" />
     <Compile Include="DemoDataGenerator.cs" />
     <Compile Include="Domain\Customer.cs" />
     <Compile Include="Domain\Entity.cs" />
-    <Compile Include="Domain\IRepository.cs" />
+    <Compile Include="DataAccess\IRepository.cs" />
     <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\OrderLine.cs" />
     <Compile Include="Domain\OrderStatus.cs" />
