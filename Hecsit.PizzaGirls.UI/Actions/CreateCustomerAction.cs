@@ -20,7 +20,21 @@ namespace Hecsit.PizzaGirls.UI.Actions
         {
             CustomerDto customer = new CustomerDto();
             context.Out.WriteLine(ConsoleColor.Yellow, "NEW CUSTOMER");
-            context.Out.WriteLine("Enter address");...
+            context.Out.WriteLine("Enter address");
+            var adress = context.In.ReadLine();
+            context.Out.WriteLine("Enter phone");
+            var phone = context.In.ReadLine();
+            context.Out.WriteLine("Does customer have a card(y/n):");
+            var temp = context.In.ReadLine();
+            if (!temp.Equals("y") && !temp.Equals("n"))
+            {
+                context.Out.WriteLine("Does customer have a card(y/n):");
+                temp = context.In.ReadLine();
+            }
+            bool card = temp.Equals("y") ? true : false;
+            customer.Address = adress;
+            customer.Phone = phone;
+            customer.Card = card;
             _customerApi.AddNewCustomer(customer);
         }
     }

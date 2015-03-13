@@ -26,13 +26,14 @@ namespace Hecsit.PizzaGirls.UI
             new MenuBuilder()
                     .Title("Pizza Delivery")
                     .Repeatable()
-                    .Item("Прайс-листик ", new ShowProductsAction(productsApi))
-                    .Item("Клиентики ", new ShowCustomersAction(customerApi))
-                    .Exit("Назад")
+                    .Item("Price-list ", new ShowProductsAction(productsApi))
+                    .Item("Clients", new ShowCustomersAction(customerApi))
+                    .Item("Create New Customer", new CreateCustomerAction(customerApi))
+                    .Exit("Back")
                     .Submenu("Измененить статус")
-                    .Exit("Назад")
+                    .Exit("Back")
                     .End()
-                    .Exit("Закрыть").GetMenu().Run();
+                    .Exit("Close").GetMenu().Run();
         }
     }
 }
