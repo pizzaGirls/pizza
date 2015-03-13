@@ -40,6 +40,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\CreateCustomerAction.cs" />
     <Compile Include="Actions\ShowProductsAction.cs" />
     <Compile Include="Actions\ShowCustomersAction.cs" />
     <Compile Include="Actions\CreateOrderAction.cs" />

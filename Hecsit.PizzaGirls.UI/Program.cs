@@ -15,6 +15,9 @@ namespace Hecsit.PizzaGirls.UI
             var productsRepository = new MemoryRepository<Product>();
             var demoData = new DemoDataGenerator(customersRepository, productsRepository);
 
+            var oredrsRepository = new MemoryRepository<Order>();
+            var orderLinesRepository = new MemoryRepository<OrderLine>();
+
             var productsApi = new ProductApi(productsRepository);
             var customerApi = new CustomerApi(customersRepository);
 

@@ -30,5 +30,11 @@ namespace Hecsit.PizzaGirls.Core.Api
                 }).ToList();
         }
 
+        public void AddNewCustomer(CustomerDto customer)
+        {          
+            Customer _customer = new Customer(customer.Address,customer.Phone,customer.Card);
+            _customerRepository.Add(_customer);
+        }
+
     }
 }
