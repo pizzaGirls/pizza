@@ -21,7 +21,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
             context.Out.WriteLine("Адрес \t\t\t Телефон \t\t Карта");
             foreach (var customer in customers)
             {
-                context.Out.WriteLine("{0}\t\t {1}\t  {2}", customer.Address, customer.Phone, customer.Card);
+                context.Out.WriteLine("{0}\t\t {1}\t  {2}", customer.Address, customer.Phone, (customer.Card)==true?"есть":"нет");
             }
         }
     }
