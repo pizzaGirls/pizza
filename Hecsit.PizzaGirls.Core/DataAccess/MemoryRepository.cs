@@ -28,5 +28,10 @@ namespace Hecsit.PizzaGirls.Core.DataAccess
         {
             return _list.AsQueryable();
         }
+
+        public Guid GetLastId()
+        {
+            return _list.Last().Id;
+        }
     }
 }

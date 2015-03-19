@@ -36,5 +36,10 @@ namespace Hecsit.PizzaGirls.Core.Api
             _customerRepository.Add(_customer);
         }
 
+        public Guid GetLastCustomer()
+        {
+            return _customerRepository.GetLastId();
+        }
+
     }
 }

@@ -7,14 +7,17 @@ using Hecsit.PizzaGirls.Core.Domain;
 
 namespace Hecsit.PizzaGirls.Core.Api
 {
-    class OrderDto
+    public class OrderDto
     {
         public string Number { get; set; }
-        private DateTime Date { get; set; }
-        private OrderStatus Status { get; set; }
-        private decimal DeliveryCost { set; get; }
-        public List<OrederLineDto> OrederLines { get; set; }
-        public string Phone { get; set; }
-        public CustomerDto Customer { get; set; }
+        public  DateTime Date { get; set; }
+        public OrderStatus Status { get; set; }
+        public decimal DeliveryCost { set; get; }
+       // public List<OrederLineDto> OrederLines { get; set; }
+
+        //public CustomerDto Customer { get; set; }
+        public bool CustomersCard { get; set; }
+        public Guid CustomerId { get; set; }
+       // public List<Guid> OrderLinesIds { get; set; }
     }
 }

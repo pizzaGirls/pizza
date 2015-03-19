@@ -10,5 +10,6 @@ namespace Hecsit.PizzaGirls.Core.DataAccess
         void Add(T entity);
         void Remove(T entity);
         IQueryable<T> AsQueryable();
+        Guid GetLastId();
     }
 }

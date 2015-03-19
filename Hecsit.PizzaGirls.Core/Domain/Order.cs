@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hecsit.PizzaGirls.Core.Api;
 
 namespace Hecsit.PizzaGirls.Core.Domain
 {
@@ -17,6 +18,13 @@ namespace Hecsit.PizzaGirls.Core.Domain
         public Order(string number, Customer customer)
         {
             _number = number;
+            _customer = customer;
+            _date = DateTime.Now;
+            _status = OrderStatus.New;
+        }
+
+        public Order(Customer customer)
+        {
             _customer = customer;
             _date = DateTime.Now;
             _status = OrderStatus.New;
