@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hecsit.PizzaGirls.Core.DataAccess;
 using Hecsit.PizzaGirls.Core.Domain;
 
@@ -12,11 +10,13 @@ namespace Hecsit.PizzaGirls.Core.Api
     {
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<Product> _productRepository;
         //private readonly IRepository<OrderLines> _orderLinesRepository;
 
-        public OrderApi(IRepository<Customer> customerRepository)
+        public OrderApi(IRepository<Customer> customerRepository, IRepository<Order> orderRepository)
         {
             _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
         }
 
         public List<OrderDto> GetOrders()
@@ -33,11 +33,20 @@ namespace Hecsit.PizzaGirls.Core.Api
                 }).ToList();
         }
 
-        public void AddNewOrder(Guid customerId, string number)
+        public Guid AddNewOrder(string number, Guid customerId)
         {
-            _orderRepository.Add(new Order(number, _customerRepository.Get(customerId)));
+            var customer = _customerRepository.Get(customerId);
+            var order = new Order(number, customer);
+            _orderRepository.Add(order);
+
+            return order.Id;
         }
 
-        
+        public void AddOrderLine(Guid orderId, Guid productId, int quantity)
+        {
+            var order = _orderRepository.Get(orderId);
+            var product = _productRepository.Get(productId);
+            order.AddLine(product, quantity);
+        }
     }
 }

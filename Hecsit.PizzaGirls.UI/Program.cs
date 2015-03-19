@@ -15,11 +15,12 @@ namespace Hecsit.PizzaGirls.UI
             var productsRepository = new MemoryRepository<Product>();
             var demoData = new DemoDataGenerator(customersRepository, productsRepository);
 
-            var oredrsRepository = new MemoryRepository<Order>();
+            var orderRepository = new MemoryRepository<Order>();
             var orderLinesRepository = new MemoryRepository<OrderLine>();
 
             var productsApi = new ProductApi(productsRepository);
             var customerApi = new CustomerApi(customersRepository);
+            var orderApi = new OrderApi(customersRepository, orderRepository);
 
             demoData.Generate();
 
@@ -28,11 +29,14 @@ namespace Hecsit.PizzaGirls.UI
                     .Repeatable()
                     .Item("Price-list ", new ShowProductsAction(productsApi))
                     .Item("Clients", new ShowCustomersAction(customerApi))
-                    .Item("Create New Customer", new CreateCustomerAction(customerApi))
-                    .Exit("Back")
-                    .Submenu("Измененить статус")
-                    .Exit("Back")
-                    .End()
+                    .Item("Show orders", new ShowOrdersAction(orderApi))
+                    //.Item("Create New Customer", new CreateCustomerAction(customerApi))
+                    .Item("Create new order", new CreateOrderAction(orderApi,customerApi))
+                    
+                    ////.Exit("Back")
+                    ////.Submenu("Измененить статус")
+                    ////.Exit("Back")
+                    //.End()
                     .Exit("Close").GetMenu().Run();
         }
     }

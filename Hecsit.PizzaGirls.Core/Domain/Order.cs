@@ -33,6 +33,18 @@ namespace Hecsit.PizzaGirls.Core.Domain
         #endregion constructor
 
         #region methods
+
+        public void AddLine(Product product, int quantity)
+        {
+            if (_status != OrderStatus.New)
+            {
+                throw new InvalidOperationException("");
+            }
+
+            var line = new OrderLine(this, product, quantity);
+            _orderLines.Add(line);
+        }
+
        #endregion
 
         #region properties

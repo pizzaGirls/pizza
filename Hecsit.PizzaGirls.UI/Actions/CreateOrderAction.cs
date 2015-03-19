@@ -1,10 +1,12 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using Feonufry.CUI.Actions;
+using Feonufry.CUI.Menu.Builders;
 using Hecsit.PizzaGirls.Core.Api;
 
 namespace Hecsit.PizzaGirls.UI.Actions
@@ -13,11 +15,13 @@ namespace Hecsit.PizzaGirls.UI.Actions
     {
         private readonly OrderApi _orderApi;
         private readonly CustomerApi _customerApi;
+        private readonly ProductApi _productApi;
 
-        public CreateOrderAction(OrderApi orderApi, CustomerApi customerApi)
+        public CreateOrderAction(OrderApi orderApi, CustomerApi customerApi, ProductApi productApi)
         {
             _orderApi = orderApi;
             _customerApi = customerApi;
+            _productApi = productApi;
         }
         public void Perform(ActionExecutionContext context)
         {
@@ -26,13 +30,44 @@ namespace Hecsit.PizzaGirls.UI.Actions
             context.Out.WriteLine("Enter number of order");
             string number = context.In.ReadLine();
             context.Out.WriteLine(ConsoleColor.Green, "CREATE NEW CUSTOMER");
-            CreateNewCustomer(context);
-            Order orderDto = new Order(number, _customerApi.GetLastCustomer());
+            var customerId = CreateNewCustomer(context);
+            var orderId = _orderApi.AddNewOrder(number, customerId);
+
+            var products = _productApi.GetProducts();
+            var builder = new MenuBuilder()
+                .Repeatable();
+            foreach (var product in products)
+            {
+                var currentProduct = product;
+                builder.Item(product.Name, ctx => AddOrderLine(orderId, currentProduct.Id, context));
+            }
+            builder.Item("Accept", ctx => Accept(ctx, orderId))
+                .GetMenu()
+                .Run();
         }
 
-        public void CreateNewCustomer(ActionExecutionContext context)
+        private void Accept(ActionExecutionContext ctx, Guid orderId)
         {
-            CustomerDto customer = new CustomerDto();
+            // TODO: accept order
+            ctx.Cancel();
+        }
+
+        private void AddOrderLine(Guid orderId, Guid productId, ActionExecutionContext context)
+        {
+            context.Out.WriteLine("Enter amount of products");
+            var temp = context.In.ReadLine();
+            int quantity;
+            while (!Int32.TryParse(temp, out quantity))
+            {
+                context.Out.WriteLine("Enter correct amount of products");
+                temp = context.In.ReadLine();
+            }
+            _orderApi.AddOrderLine(orderId, productId, quantity);
+        }
+
+        public Guid CreateNewCustomer(ActionExecutionContext context)
+        {
+            var customer = new CustomerDto();
             context.Out.WriteLine(ConsoleColor.Yellow, "NEW CUSTOMER");
             context.Out.WriteLine("Enter address");
             var adress = context.In.ReadLine();
@@ -49,7 +84,8 @@ namespace Hecsit.PizzaGirls.UI.Actions
             customer.Address = adress;
             customer.Phone = phone;
             customer.Card = card;
-            _customerApi.AddNewCustomer(customer);
+            Guid customerId = _customerApi.AddNewCustomer(customer);
+            return customerId;
         }
     }
 }
