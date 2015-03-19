@@ -64,6 +64,7 @@ namespace Hecsit.PizzaGirls.Core.Domain
         public OrderStatus Status
         {
             get { return _status; }
+            set { _status = value; }
         }
 
         public decimal DeliveryCost

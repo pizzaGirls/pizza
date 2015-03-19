@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Feonufry.CUI.Actions;
 using Feonufry.CUI.Menu.Builders;
 using Hecsit.PizzaGirls.Core.Api;
+using Hecsit.PizzaGirls.Core.Domain;
 
 namespace Hecsit.PizzaGirls.UI.Actions
 {
@@ -33,6 +34,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
             var customerId = CreateNewCustomer(context);
             var orderId = _orderApi.AddNewOrder(number, customerId);
 
+            context.Out.WriteLine(ConsoleColor.Green, "CHOOSE PRODUCTS");
             var products = _productApi.GetProducts();
             var builder = new MenuBuilder()
                 .Repeatable();
@@ -49,6 +51,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
         private void Accept(ActionExecutionContext ctx, Guid orderId)
         {
             // TODO: accept order
+            _orderApi.ChangeStatus(orderId, OrderStatus.Accepted);
             ctx.Cancel();
         }
 

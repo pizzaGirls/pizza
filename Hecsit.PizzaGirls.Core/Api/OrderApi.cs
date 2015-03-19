@@ -13,10 +13,11 @@ namespace Hecsit.PizzaGirls.Core.Api
         private readonly IRepository<Product> _productRepository;
         //private readonly IRepository<OrderLines> _orderLinesRepository;
 
-        public OrderApi(IRepository<Customer> customerRepository, IRepository<Order> orderRepository)
+        public OrderApi(IRepository<Customer> customerRepository, IRepository<Order> orderRepository, IRepository<Product> productRepository )
         {
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
         }
 
         public List<OrderDto> GetOrders()
@@ -47,6 +48,12 @@ namespace Hecsit.PizzaGirls.Core.Api
             var order = _orderRepository.Get(orderId);
             var product = _productRepository.Get(productId);
             order.AddLine(product, quantity);
+        }
+
+        public void ChangeStatus(Guid orderId, OrderStatus status)
+        {
+            var order = _orderRepository.Get(orderId);
+            order.Status = status;
         }
     }
 }
