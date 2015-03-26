@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Feonufry.CUI.Actions;
+using Feonufry.CUI.Menu.Builders;
 using Hecsit.PizzaGirls.Core.Api;
 
 namespace Hecsit.PizzaGirls.UI.Actions
@@ -22,11 +23,12 @@ namespace Hecsit.PizzaGirls.UI.Actions
             var orders = _orderApi.GetOrders();
 
             context.Out.WriteLine(ConsoleColor.Yellow, "ORDERS");
-            context.Out.WriteLine("Number \t\t\t Data \t\t Status  ");
+            context.Out.WriteLine("Number \t\t\t Data \t\t Status \t\t Price ");
             foreach (var order in orders)
             {
-                context.Out.WriteLine("{0}\t\t {1}\t  {2}", order.Number, order.Date, order.Status);
+                context.Out.WriteLine("{0}\t\t {1}\t  {2}\t{3}", order.Number, order.Date, order.Status, order.Price);
             }
+
         }
     }
 }

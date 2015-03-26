@@ -20,7 +20,7 @@ namespace Hecsit.PizzaGirls.UI
 
             var productsApi = new ProductApi(productsRepository);
             var customerApi = new CustomerApi(customersRepository);
-            var orderApi = new OrderApi(customersRepository, orderRepository, productsRepository);
+            var orderApi = new OrderApi(customersRepository, orderRepository, productsRepository,orderLinesRepository);
             var orderLineApi = new OrderLineApi(orderLinesRepository);
 
             demoData.Generate();

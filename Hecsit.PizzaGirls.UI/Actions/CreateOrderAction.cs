@@ -34,7 +34,16 @@ namespace Hecsit.PizzaGirls.UI.Actions
             string number = context.In.ReadLine();
             context.Out.WriteLine(ConsoleColor.Green, "CREATE NEW CUSTOMER");
             var customerId = CreateNewCustomer(context);
-            var orderId = _orderApi.AddNewOrder(number, customerId);
+            context.Out.WriteLine("Enter price of delivery");
+            string temp = context.In.ReadLine();
+            decimal price;
+            while (!Decimal.TryParse(temp, out price))
+            {
+                context.Out.WriteLine("Enter correct price of delivery");
+                temp = context.In.ReadLine();
+            }
+            context.Out.WriteLine("Enter cost of delivery");
+            var orderId = _orderApi.AddNewOrder(number, customerId, price);
 
             context.Out.WriteLine(ConsoleColor.Green, "CHOOSE PRODUCTS");
             var products = _productApi.GetProducts();
@@ -52,23 +61,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
 
         private void Accept(ActionExecutionContext ctx, Guid orderId)
         {
-            var orderLines = _orderLineApi.GetOrderLinesWithOrderId(orderId);
-            decimal price = 0;
-            var order = _orderApi.GetOrderById(orderId);
-            foreach (var orderLine in orderLines)
-            {
-                price += orderLine.Cost*orderLine.Quantity;
-            }
-            if (price <= 1500)
-            {
-                //TODO спросить про стоимость доставки. У нас она либо 0 , либо фииксированная, нужно ли тогда вообще это поле
-            }
-            if (order.ElementAt(0).CustomersCard == true)
-            {
-                price = price*(decimal)0.75;
-            }
-            //TODO спросить как сохранить изменения
-            _orderApi.Accept(orderId, OrderStatus.Accepted);
+            _orderApi.Accept(orderId);
             ctx.Cancel();
         }
 

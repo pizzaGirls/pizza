@@ -16,9 +16,9 @@ namespace Hecsit.PizzaGirls.Core.Domain
 
         #region constructor
 
-        public Order(string number, Customer customer)
+        public Order(string number, Customer customer, decimal deliveryPrice)
         {
-            _price = 0;
+            _deliveryCost = deliveryPrice;
             _number = number;
             _customer = customer;
             _date = DateTime.Now;
