@@ -11,12 +11,14 @@ namespace Hecsit.PizzaGirls.Core.Domain
         private OrderStatus _status;
         private decimal _deliveryCost;
         private Customer _customer;
+        private decimal _price;
         private readonly List<OrderLine> _orderLines = new List<OrderLine>();
 
         #region constructor
 
         public Order(string number, Customer customer)
         {
+            _price = 0;
             _number = number;
             _customer = customer;
             _date = DateTime.Now;
@@ -71,6 +73,12 @@ namespace Hecsit.PizzaGirls.Core.Domain
         {
             get { return _deliveryCost; }
             set { _deliveryCost = value; }
+        }
+
+        public decimal Price
+        {
+            get { return _price; }
+            set { _price = value; }
         }
 
         public Customer Customer

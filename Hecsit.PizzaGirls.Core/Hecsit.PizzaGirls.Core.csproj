@@ -39,6 +39,7 @@
     <Compile Include="Api\CustomerDto.cs" />
     <Compile Include="Api\OrderApi.cs" />
     <Compile Include="Api\OrderDto.cs" />
+    <Compile Include="Api\OrderLineApi.cs" />
     <Compile Include="Api\OrederLineDto.cs" />
     <Compile Include="Api\ProductApi.cs" />
     <Compile Include="Api\ProductDto.cs" />

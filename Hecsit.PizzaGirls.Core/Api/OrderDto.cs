@@ -19,5 +19,6 @@ namespace Hecsit.PizzaGirls.Core.Api
         public bool CustomersCard { get; set; }
         public Guid CustomerId { get; set; }
        // public List<Guid> OrderLinesIds { get; set; }
+        public decimal Price { get; set; }
     }
 }

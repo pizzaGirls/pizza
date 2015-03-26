@@ -21,6 +21,7 @@ namespace Hecsit.PizzaGirls.UI
             var productsApi = new ProductApi(productsRepository);
             var customerApi = new CustomerApi(customersRepository);
             var orderApi = new OrderApi(customersRepository, orderRepository, productsRepository);
+            var orderLineApi = new OrderLineApi(orderLinesRepository);
 
             demoData.Generate();
 
@@ -31,7 +32,7 @@ namespace Hecsit.PizzaGirls.UI
                     .Item("Clients", new ShowCustomersAction(customerApi))
                     .Item("Show orders", new ShowOrdersAction(orderApi))
                     //.Item("Create New Customer", new CreateCustomerAction(customerApi))
-                    .Item("Create new order", new CreateOrderAction(orderApi,customerApi,productsApi))
+                    .Item("Create new order", new CreateOrderAction(orderApi,customerApi,productsApi,orderLineApi))
                     
                     ////.Exit("Back")
                     ////.Submenu("Измененить статус")
