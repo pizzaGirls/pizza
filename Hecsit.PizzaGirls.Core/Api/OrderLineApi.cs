@@ -16,10 +16,10 @@ namespace Hecsit.PizzaGirls.Core.Api
         {
             _orderLineRepository = orderLineRepository;
         }
-        public List<OrederLineDto> GetOrderLinesWithOrderId(Guid id)
+        public List<OrederLineDto> GetOrderLinesWithOrderId(string number)
         {
             return _orderLineRepository.AsQueryable()
-                .Where(x=>(x.Order.Id == id))
+                .Where(x=>(x.Order.Number == number))
                 .Select(x => new OrederLineDto
                 {
                     Quantity = x.Quantity,

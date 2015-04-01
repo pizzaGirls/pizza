@@ -82,6 +82,20 @@ namespace Hecsit.PizzaGirls.Core.Api
                 }).ToList();
         }
 
+        public List<OrderDto> GetAcceptedOrInProgressOrders()
+        {
+            return _orderRepository.AsQueryable()
+                .Where(x => (x.Status == OrderStatus.Accepted || x.Status == OrderStatus.InProgress))
+                .Select(x => new OrderDto
+                {
+                    Number = x.Number,
+                    Price = x.Price,
+                    Date = x.Date,
+                    Status = x.Status
+
+                }).ToList();
+        }
+
         public void Accept(Guid orderId)
         {
             decimal price = 0;

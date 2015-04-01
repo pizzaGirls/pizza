@@ -33,6 +33,7 @@ namespace Hecsit.PizzaGirls.UI
                     .Item("Show orders", new ShowOrdersAction(orderApi))
                     //.Item("Create New Customer", new CreateCustomerAction(customerApi))
                     .Item("Create new order", new CreateOrderAction(orderApi,customerApi,productsApi,orderLineApi))
+                    .Item("Mark as prepared", new PreparedOrderLineAction(orderApi, orderLineApi))
                     
                     ////.Exit("Back")
                     ////.Submenu("Измененить статус")
