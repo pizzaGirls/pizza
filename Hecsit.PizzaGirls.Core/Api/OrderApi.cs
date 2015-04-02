@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Hecsit.PizzaGirls.Core.DataAccess;
 using Hecsit.PizzaGirls.Core.Domain;
 
@@ -27,6 +28,7 @@ namespace Hecsit.PizzaGirls.Core.Api
             return _orderRepository.AsQueryable()
                 .Select(x => new OrderDto
                 {
+                    Id = x.Id,
                     Number = x.Number,
                     Date = x.Date,
                     Status = x.Status,
@@ -44,6 +46,14 @@ namespace Hecsit.PizzaGirls.Core.Api
             _orderRepository.Add(order);
             return order.Id;
         }
+
+        /*public Guid OrderGuid(string number)
+        {
+            return _orderRepository.AsQueryable()
+                .Where(x => x.Number == number)
+                //.Where(x => x.Customer.Id == customerId)
+                .Select(x => x.Id).FirstOrDefault();
+        }*/
 
         //public OrderDto GetOrderById(Guid orderId)
         //{
@@ -76,9 +86,11 @@ namespace Hecsit.PizzaGirls.Core.Api
                 .Where(x => (x.Order.Id == id))
                 .Select(x => new OrederLineDto
                 {
+                    Id = x.Id,
                     Quantity = x.Quantity,
                     Cost = x.Cost,
-                    Ready = x.Ready
+                    Ready = x.Ready,
+                    ProductName = x.Product.Name,
                 }).ToList();
         }
 
@@ -88,6 +100,52 @@ namespace Hecsit.PizzaGirls.Core.Api
                 .Where(x => (x.Status == OrderStatus.Accepted || x.Status == OrderStatus.InProgress))
                 .Select(x => new OrderDto
                 {
+                    Id = x.Id,
+                    Number = x.Number,
+                    Price = x.Price,
+                    Date = x.Date,
+                    Status = x.Status
+
+                }).ToList();
+        }
+
+        public List<OrderDto> GetAcceptedOrders()
+        {
+            return _orderRepository.AsQueryable()
+                .Where(x => (x.Status == OrderStatus.Accepted))
+                .Select(x => new OrderDto
+                {
+                    Id = x.Id,
+                    Number = x.Number,
+                    Price = x.Price,
+                    Date = x.Date,
+                    Status = x.Status
+
+                }).ToList();
+        }
+
+        public List<OrderDto> GetRedyToDeliveryOrders()
+        {
+            return _orderRepository.AsQueryable()
+                .Where(x => (x.Status == OrderStatus.ReadyToDelivery))
+                .Select(x => new OrderDto
+                {
+                    Id = x.Id,
+                    Number = x.Number,
+                    Price = x.Price,
+                    Date = x.Date,
+                    Status = x.Status
+
+                }).ToList();
+        }
+
+        public List<OrderDto> GetDeliveryOrders()
+        {
+            return _orderRepository.AsQueryable()
+                .Where(x => (x.Status == OrderStatus.Delivery))
+                .Select(x => new OrderDto
+                {
+                    Id = x.Id,
                     Number = x.Number,
                     Price = x.Price,
                     Date = x.Date,
@@ -119,5 +177,30 @@ namespace Hecsit.PizzaGirls.Core.Api
             order.Price = price;
             order.Status = OrderStatus.Accepted;
         }
+
+        public void InProgress(Guid orderId)
+        {
+            var order = _orderRepository.Get(orderId);
+            order.Status = OrderStatus.InProgress;
+        }
+
+        public void ReadyToDelivery(Guid orderId)
+        {
+            var order = _orderRepository.Get(orderId);
+            order.Status = OrderStatus.ReadyToDelivery;
+        }
+
+        public void Delivery(Guid orderId)
+        {
+            var order = _orderRepository.Get(orderId);
+            order.Status = OrderStatus.Delivery;
+        }
+
+        public void Delivered(Guid orderId)
+        {
+            var order = _orderRepository.Get(orderId);
+            order.Status = OrderStatus.Delivered;
+        }
+
     }
 }

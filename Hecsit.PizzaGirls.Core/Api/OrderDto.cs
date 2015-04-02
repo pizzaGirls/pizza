@@ -9,6 +9,7 @@ namespace Hecsit.PizzaGirls.Core.Api
 {
     public class OrderDto
     {
+        public Guid Id { get; set; }
         public string Number { get; set; }
         public  DateTime Date { get; set; }
         public OrderStatus Status { get; set; }

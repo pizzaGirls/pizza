@@ -12,14 +12,14 @@ namespace Hecsit.PizzaGirls.UI.Actions
     public class PreparedOrderLineAction : IAction
     {
         private readonly OrderApi _orderApi;
-        private readonly OrderDto _orderDto;
+        //private readonly OrderDto _orderDto;
         private readonly OrderLineApi _orderLineApi;
 
         public PreparedOrderLineAction(OrderApi orderApi, OrderLineApi orderLineApi)
         {
             _orderLineApi = orderLineApi;
             _orderApi = orderApi;
-            _orderDto= new OrderDto();
+           // _orderDto= new OrderDto();
         }
 
         public void Perform(ActionExecutionContext context)
@@ -35,34 +35,58 @@ namespace Hecsit.PizzaGirls.UI.Actions
             {
                 var currentOrder = order;
                 var temp = order.Number + " " + order.Date + " " + order.Status;
-                submenuOrder.Item(temp, ctx => SelectOrderLineFromOrder(ctx, currentOrder));
+                submenuOrder.Item(temp, ctx => SelectNotReadyOrderLineFromOrder(ctx, currentOrder));
             }
 
             submenuOrder.GetMenu().Run();
 
         }
 
-        private void SelectOrderLineFromOrder(ActionExecutionContext context, OrderDto orderDto)
+        private void SelectNotReadyOrderLineFromOrder(ActionExecutionContext context, OrderDto orderDto)
         {
             var submenuOrder = new MenuBuilder()
                .Title("SELECT ORDERLINE: ")
                .RunnableOnce();
 
-            var orderLines = _orderLineApi.GetOrderLinesWithOrderId(orderDto.Number);
+            var orderLines = _orderLineApi.GetNotReadyOrderLinesWithOrderId(orderDto.Number);
 
             foreach (var orderLine in orderLines)
             {
                 var currentOrderLine = orderLine;
-                var temp = orderLine.Cost + " " + orderLine.Quantity;
-                submenuOrder.Item(temp, ctx => SetOrderLineStatusAsReady(ctx, currentOrderLine));
+                var temp =currentOrderLine.ProductName +  " " + currentOrderLine.Quantity +" "+ currentOrderLine.Cost;
+
+                submenuOrder.Item(temp, ctx => SetOrderLineStatusAsReady(ctx, currentOrderLine.Id, orderDto.Id));
             }
 
             submenuOrder.GetMenu().Run();
         }
 
-        private void SetOrderLineStatusAsReady(ActionExecutionContext context, OrederLineDto orderLineDto)
+        private void SetOrderLineStatusAsReady(ActionExecutionContext context, Guid orderLineId, Guid orderId)
         {
+            _orderLineApi.Prepared(orderLineId);
+            SetOrderStatusAsInProgressOrReadyToDelivery(orderId);
+        }
 
+        private void SetOrderStatusAsInProgressOrReadyToDelivery(Guid orderId)
+        {
+            var orderLines = _orderApi.GetOrderLinesWithOrderId(orderId);
+            bool flag = false;
+            foreach (var orderLine in orderLines)
+            {
+                if (orderLine.Ready == false)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag == true)
+            {
+                _orderApi.InProgress(orderId);
+            }
+            else
+            {
+                _orderApi.ReadyToDelivery(orderId);
+            }
         }
     }
 }

@@ -42,10 +42,14 @@
   <ItemGroup>
     <Compile Include="Actions\CreateCustomerAction.cs" />
     <Compile Include="Actions\PreparedOrderLineAction.cs" />
+    <Compile Include="Actions\SetAsDelivered.cs" />
+    <Compile Include="Actions\SetAsInProgress.cs" />
+    <Compile Include="Actions\ShowDetailedOrdersAction.cs" />
     <Compile Include="Actions\ShowOrdersAction.cs" />
     <Compile Include="Actions\ShowProductsAction.cs" />
     <Compile Include="Actions\ShowCustomersAction.cs" />
     <Compile Include="Actions\CreateOrderAction.cs" />
+    <Compile Include="Actions\TakeIntoDelivery.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

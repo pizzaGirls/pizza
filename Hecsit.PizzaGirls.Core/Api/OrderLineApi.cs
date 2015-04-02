@@ -22,10 +22,33 @@ namespace Hecsit.PizzaGirls.Core.Api
                 .Where(x=>(x.Order.Number == number))
                 .Select(x => new OrederLineDto
                 {
+                    Id = x.Id,
                     Quantity = x.Quantity,
                     Cost = x.Cost,
-                    Ready = x.Ready
+                    Ready = x.Ready,
+                    ProductName = x.Product.Name
                 }).ToList();
         }
+
+        public List<OrederLineDto> GetNotReadyOrderLinesWithOrderId(string number)
+        {
+            return _orderLineRepository.AsQueryable()
+                .Where(x => (x.Order.Number == number) && (x.Ready==false))
+                .Select(x => new OrederLineDto
+                {
+                    Id = x.Id,
+                    Quantity = x.Quantity,
+                    Cost = x.Cost,
+                    Ready = x.Ready,
+                    ProductName = x.Product.Name
+                }).ToList();
+        }
+        public void Prepared(Guid orderLineId)
+        {
+            var orderLine = _orderLineRepository.Get(orderLineId);
+            orderLine.Ready = true;
+        }
+
+
     }
 }
