@@ -54,6 +54,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
                 var currentProduct = product;
                 builder.Item(product.Name, ctx => AddOrderLine(orderId, currentProduct.Id, context));
             }
+            
             builder.Item("Accept", ctx => Accept(ctx, orderId))
                 .GetMenu()
                 .Run();

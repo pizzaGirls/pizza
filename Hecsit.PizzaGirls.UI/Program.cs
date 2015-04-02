@@ -18,10 +18,13 @@ namespace Hecsit.PizzaGirls.UI
             var orderRepository = new MemoryRepository<Order>();
             var orderLinesRepository = new MemoryRepository<OrderLine>();
 
+            var priceCalculator = new PriceCalculator();
+
             var productsApi = new ProductApi(productsRepository);
             var customerApi = new CustomerApi(customersRepository);
-            var orderApi = new OrderApi(customersRepository, orderRepository, productsRepository,orderLinesRepository);
+            var orderApi = new OrderApi(customersRepository, orderRepository, productsRepository,orderLinesRepository,priceCalculator);
             var orderLineApi = new OrderLineApi(orderLinesRepository);
+            var detailedOrderApi = new DetailedOrderApi(orderRepository);
 
             demoData.Generate();
 
@@ -31,8 +34,7 @@ namespace Hecsit.PizzaGirls.UI
                     .Item("Price-list ", new ShowProductsAction(productsApi))
                     .Item("Clients", new ShowCustomersAction(customerApi))
                     .Item("Show orders", new ShowOrdersAction(orderApi))
-                    .Item("Show orders", new ShowDetailedOrdersAction(orderApi))
-                    //.Item("Create New Customer", new CreateCustomerAction(customerApi))
+                    .Item("Show orders", new ShowDetailedOrdersAction(detailedOrderApi,orderApi))
                     .Item("Create new order", new CreateOrderAction(orderApi,customerApi,productsApi,orderLineApi))
                     .Item("Set as In Progress", new SetAsInProgress(orderApi))
                     .Item("Mark as prepared", new PreparedOrderLineAction(orderApi, orderLineApi))

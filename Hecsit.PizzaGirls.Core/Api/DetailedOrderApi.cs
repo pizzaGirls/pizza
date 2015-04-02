@@ -10,15 +10,38 @@ namespace Hecsit.PizzaGirls.Core.Api
 {
     public class DetailedOrderApi
     {
-        private readonly IRepository<OrderLine> _orderLineRepository;
-        public readonly IRepository<Customer> _customerRepository;
-        public readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Order> _orderRepository;
 
-        public DetailedOrderApi(IRepository<OrderLine> orderLineRepository, IRepository<Customer> customerRepository, IRepository<Product> productRepository)
+        public DetailedOrderApi(IRepository<Order> orderRepository)
         {
-            _orderLineRepository = orderLineRepository;
-            _customerRepository = customerRepository;
-            _productRepository = productRepository;
+            _orderRepository = orderRepository;
         }
+
+        public DetailedOrderDto GetDetailedOrder(Guid id)
+        {
+            return _orderRepository.AsQueryable()
+                .Where(x=>x.Id == id)
+                .Select(x => new DetailedOrderDto
+                {
+                    Id = x.Id,
+                    Number = x.Number,
+                    Date = x.Date,
+                    DeliveryCost = x.DeliveryCost,
+                    Status = x.Status,
+                    Price = x.Price,
+                    CustomerAddress = x.Customer.Address,
+                    Lines = x.OrderLines.Select(l => new OrederLineDto
+                    {
+                        Id = l.Id,
+                        Cost = l.Cost,
+                        ProductName = l.Product.Name,
+                        Quantity = l.Quantity,
+                        Ready = l.Ready
+                    })
+                    .ToList()
+                }).FirstOrDefault();
+        }
+
+
     }
 }

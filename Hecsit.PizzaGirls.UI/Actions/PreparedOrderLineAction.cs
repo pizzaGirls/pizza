@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Feonufry.CUI.Actions;
 using Feonufry.CUI.Menu.Builders;
 using Hecsit.PizzaGirls.Core.Api;
+using Hecsit.PizzaGirls.Core.Domain;
 
 namespace Hecsit.PizzaGirls.UI.Actions
 {
@@ -25,7 +26,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
         public void Perform(ActionExecutionContext context)
         {
             context.Out.WriteLine(ConsoleColor.Green, "Mark Order Line as prepared");
-            var orders = _orderApi.GetAcceptedOrInProgressOrders();
+            var orders = _orderApi.GetOrdersWithStatus(OrderStatus.InProgress);
 
             var submenuOrder = new MenuBuilder()
                .Title("SELECT ORDER: ")
@@ -63,7 +64,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
 
         private void SetOrderLineStatusAsReady(ActionExecutionContext context, Guid orderLineId, Guid orderId)
         {
-            _orderLineApi.Prepared(orderLineId);
+            _orderLineApi.CompleteLine(orderLineId);
             SetOrderStatusAsInProgressOrReadyToDelivery(orderId);
         }
 
@@ -81,11 +82,11 @@ namespace Hecsit.PizzaGirls.UI.Actions
             }
             if (flag == true)
             {
-                _orderApi.InProgress(orderId);
+                _orderApi.StartProgress(orderId);
             }
             else
             {
-                _orderApi.ReadyToDelivery(orderId);
+                _orderApi.TransferToDelivery(orderId);
             }
         }
     }

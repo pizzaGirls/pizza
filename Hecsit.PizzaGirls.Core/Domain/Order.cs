@@ -87,7 +87,7 @@ namespace Hecsit.PizzaGirls.Core.Domain
             set { _customer = value; }
         }
 
-        public ICollection<OrderLine> OrderLines
+        public List<OrderLine> OrderLines
         {
             get { return _orderLines; }
         }

@@ -53,6 +53,7 @@
     <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\OrderLine.cs" />
     <Compile Include="Domain\OrderStatus.cs" />
+    <Compile Include="Domain\PriceCalculator.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Feonufry.CUI.Actions;
 using Feonufry.CUI.Menu.Builders;
 using Hecsit.PizzaGirls.Core.Api;
+using Hecsit.PizzaGirls.Core.Domain;
 
 namespace Hecsit.PizzaGirls.UI.Actions
 {
@@ -21,7 +22,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
          public void Perform(ActionExecutionContext context)
          {
              context.Out.WriteLine(ConsoleColor.Green, "Mark Order as Delivery");
-             var orders = _orderApi.GetRedyToDeliveryOrders();
+             var orders = _orderApi.GetOrdersWithStatus(OrderStatus.ReadyToDelivery);
 
              var submenuOrder = new MenuBuilder()
                             .Title("SELECT ORDER: ")
@@ -38,7 +39,7 @@ namespace Hecsit.PizzaGirls.UI.Actions
 
          private void SetAsDelivery(ActionExecutionContext ctx, Guid orderid)
          {
-             _orderApi.Delivery(orderid);
+             _orderApi.StartDelivery(orderid);
              ctx.Cancel();
          }
      }

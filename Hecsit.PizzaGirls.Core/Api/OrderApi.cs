@@ -13,14 +13,16 @@ namespace Hecsit.PizzaGirls.Core.Api
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderLine> _orderLineRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly PriceCalculator _priceCalculator;
         //private readonly IRepository<OrderLines> _orderLinesRepository;
 
-        public OrderApi(IRepository<Customer> customerRepository, IRepository<Order> orderRepository, IRepository<Product> productRepository, IRepository<OrderLine> orderlineRepository)
+        public OrderApi(IRepository<Customer> customerRepository, IRepository<Order> orderRepository, IRepository<Product> productRepository, IRepository<OrderLine> orderlineRepository, PriceCalculator priceCalculator)
         {
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _orderLineRepository = orderlineRepository;
+            _priceCalculator = priceCalculator;
         }
 
         public List<OrderDto> GetOrders()
@@ -47,30 +49,6 @@ namespace Hecsit.PizzaGirls.Core.Api
             return order.Id;
         }
 
-        /*public Guid OrderGuid(string number)
-        {
-            return _orderRepository.AsQueryable()
-                .Where(x => x.Number == number)
-                //.Where(x => x.Customer.Id == customerId)
-                .Select(x => x.Id).FirstOrDefault();
-        }*/
-
-        //public OrderDto GetOrderById(Guid orderId)
-        //{
-        //    return _orderRepository.AsQueryable()
-        //        .Where(x => x.Id == orderId)
-        //        .Select(x => new OrderDto
-        //        {
-        //            Number = x.Number,
-        //            Date = x.Date,
-        //            Status = x.Status,
-        //            DeliveryCost = x.DeliveryCost,
-        //            CustomerId = x.Customer.Id,
-        //            CustomersCard = x.Customer.Card,
-        //        })
-        //        .FirstOrDefault();
-        //}
-
         public void AddOrderLine(Guid orderId, Guid productId, int quantity)
         {
             var order = _orderRepository.Get(orderId);
@@ -94,10 +72,10 @@ namespace Hecsit.PizzaGirls.Core.Api
                 }).ToList();
         }
 
-        public List<OrderDto> GetAcceptedOrInProgressOrders()
+        public List<OrderDto> GetOrdersWithStatus(OrderStatus status)
         {
             return _orderRepository.AsQueryable()
-                .Where(x => (x.Status == OrderStatus.Accepted || x.Status == OrderStatus.InProgress))
+                .Where(x => (x.Status == status))
                 .Select(x => new OrderDto
                 {
                     Id = x.Id,
@@ -109,88 +87,29 @@ namespace Hecsit.PizzaGirls.Core.Api
                 }).ToList();
         }
 
-        public List<OrderDto> GetAcceptedOrders()
-        {
-            return _orderRepository.AsQueryable()
-                .Where(x => (x.Status == OrderStatus.Accepted))
-                .Select(x => new OrderDto
-                {
-                    Id = x.Id,
-                    Number = x.Number,
-                    Price = x.Price,
-                    Date = x.Date,
-                    Status = x.Status
-
-                }).ToList();
-        }
-
-        public List<OrderDto> GetRedyToDeliveryOrders()
-        {
-            return _orderRepository.AsQueryable()
-                .Where(x => (x.Status == OrderStatus.ReadyToDelivery))
-                .Select(x => new OrderDto
-                {
-                    Id = x.Id,
-                    Number = x.Number,
-                    Price = x.Price,
-                    Date = x.Date,
-                    Status = x.Status
-
-                }).ToList();
-        }
-
-        public List<OrderDto> GetDeliveryOrders()
-        {
-            return _orderRepository.AsQueryable()
-                .Where(x => (x.Status == OrderStatus.Delivery))
-                .Select(x => new OrderDto
-                {
-                    Id = x.Id,
-                    Number = x.Number,
-                    Price = x.Price,
-                    Date = x.Date,
-                    Status = x.Status
-
-                }).ToList();
-        }
-
+        
         public void Accept(Guid orderId)
         {
-            decimal price = 0;
             var order = _orderRepository.Get(orderId);
-            //var order = this.GetOrderById(orderId);
             var orderLines = GetOrderLinesWithOrderId(orderId);
-            
-            
-            foreach (var orderLine in orderLines)
-            {
-                price += orderLine.Cost * orderLine.Quantity;
-            }
-            if (price <= 1500)
-            {
-                price = price + order.DeliveryCost;
-            }
-            if (order.Customer.Card  == true)
-            {
-                price = price * (decimal)0.75;
-            }
-            order.Price = price;
+            order.Price = _priceCalculator.CalculatePrice(order, orderLines);
+           
             order.Status = OrderStatus.Accepted;
         }
 
-        public void InProgress(Guid orderId)
+        public void StartProgress(Guid orderId)
         {
             var order = _orderRepository.Get(orderId);
             order.Status = OrderStatus.InProgress;
         }
 
-        public void ReadyToDelivery(Guid orderId)
+        public void TransferToDelivery(Guid orderId)
         {
             var order = _orderRepository.Get(orderId);
             order.Status = OrderStatus.ReadyToDelivery;
         }
 
-        public void Delivery(Guid orderId)
+        public void StartDelivery(Guid orderId)
         {
             var order = _orderRepository.Get(orderId);
             order.Status = OrderStatus.Delivery;
