@@ -30,9 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\CustomerApi.cs" />
@@ -45,6 +52,7 @@
     <Compile Include="Api\OrederLineDto.cs" />
     <Compile Include="Api\ProductApi.cs" />
     <Compile Include="Api\ProductDto.cs" />
+    <Compile Include="CoreInstaller.cs" />
     <Compile Include="DataAccess\MemoryRepository.cs" />
     <Compile Include="DemoDataGenerator.cs" />
     <Compile Include="Domain\Customer.cs" />
@@ -56,6 +64,9 @@
     <Compile Include="Domain\PriceCalculator.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

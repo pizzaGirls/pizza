@@ -1,4 +1,6 @@
-﻿using Feonufry.CUI.Menu.Builders;
+﻿using Castle.MicroKernel.Registration;
+using Castle.Windsor;
+using Feonufry.CUI.Menu.Builders;
 using Hecsit.PizzaGirls.Core;
 using Hecsit.PizzaGirls.Core.Api;
 using Hecsit.PizzaGirls.Core.DataAccess;
@@ -11,35 +13,25 @@ namespace Hecsit.PizzaGirls.UI
     {
         static void Main(string[] args)
         {
-            var customersRepository = new MemoryRepository<Customer>();
-            var productsRepository = new MemoryRepository<Product>();
-            var demoData = new DemoDataGenerator(customersRepository, productsRepository);
+            var container = new WindsorContainer();
+            container.Install(new CoreInstaller(), new UIInstaller());
 
-            var orderRepository = new MemoryRepository<Order>();
-            var orderLinesRepository = new MemoryRepository<OrderLine>();
-
-            var priceCalculator = new PriceCalculator();
-
-            var productsApi = new ProductApi(productsRepository);
-            var customerApi = new CustomerApi(customersRepository);
-            var orderApi = new OrderApi(customersRepository, orderRepository, productsRepository,orderLinesRepository,priceCalculator);
-            var orderLineApi = new OrderLineApi(orderLinesRepository);
-            var detailedOrderApi = new DetailedOrderApi(orderRepository);
-
+            var demoData = container.Resolve<DemoDataGenerator>();
             demoData.Generate();
 
             new MenuBuilder()
+                    .WithActionFactory(new WindsorActionFactory(container))
                     .Title("Pizza Delivery")
                     .Repeatable()
-                    .Item("Price-list ", new ShowProductsAction(productsApi))
-                    .Item("Clients", new ShowCustomersAction(customerApi))
-                    .Item("Show orders", new ShowOrdersAction(orderApi))
-                    .Item("Show orders", new ShowDetailedOrdersAction(detailedOrderApi,orderApi))
-                    .Item("Create new order", new CreateOrderAction(orderApi,customerApi,productsApi,orderLineApi))
-                    .Item("Set as In Progress", new SetAsInProgress(orderApi))
-                    .Item("Mark as prepared", new PreparedOrderLineAction(orderApi, orderLineApi))
-                    .Item("Take into delivery", new TakeIntoDelivery(orderApi))
-                    .Item("Set as delivered", new SetAsDelivered(orderApi))
+                    .Item<ShowProductsAction>("Price-list ")
+                    .Item<ShowCustomersAction>("Clients")
+                    .Item<ShowOrdersAction>("Show orders")
+                    .Item<ShowDetailedOrdersAction>("Show orders")
+                    .Item<CreateOrderAction>("Create new order")
+                    //.Item<SetAsInProgress>("Set as In Progress")
+                    .Item<PreparedOrderLineAction>("Mark as prepared")
+                    .Item<TakeIntoDelivery>("Take into delivery")
+                    .Item<SetAsDelivered>("Set as delivered")
                     ////.Exit("Back")
                     ////.Submenu("Измененить статус")
                     ////.Exit("Back")
